@@ -23,6 +23,10 @@ for (let p of pages) {
     let title = p.title;
     // TODO create link and add it to nav
 
+    pages = pages.map(page => {
+        page.url = !ARE_WE_HOME && !page.url.startsWith('http') ? 'portfolio/' + page.url : page.url;
+        return page;
+    });
     url = !ARE_WE_HOME && !url.startsWith('http') ? '../' + url : url;
 
     // Create link element
