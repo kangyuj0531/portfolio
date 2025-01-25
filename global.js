@@ -5,12 +5,12 @@ function $$(selector, context = document) {
 }
 
 let pages = [
-    {url: '', title: 'Home'},
-    {url: 'projects/', title: 'Projects'},
+    {url: 'portfolio/', title: 'Home'},
+    {url: 'portfolio/projects/', title: 'Projects'},
     // add the rest of your pages here
-    {url: 'contact/', title: 'Contact'},
+    {url: 'portfolio/contact/', title: 'Contact'},
     {url: 'https://github.com/kangyuj0531', title: 'Profile'},
-    {url: 'resume/', title: 'Resume'}
+    {url: 'portfolio/resume/', title: 'Resume'}
 ];
 
 let nav = document.createElement('nav');
@@ -22,11 +22,6 @@ for (let p of pages) {
     let url = p.url;
     let title = p.title;
     // TODO create link and add it to nav
-
-    pages = pages.map(page => {
-        page.url = !ARE_WE_HOME && !page.url.startsWith('http') ? 'portfolio/' + page.url : page.url;
-        return page;
-    });
     url = !ARE_WE_HOME && !url.startsWith('http') ? '../' + url : url;
 
     // Create link element
