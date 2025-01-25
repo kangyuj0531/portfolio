@@ -5,12 +5,12 @@ function $$(selector, context = document) {
 }
 
 let pages = [
-    {url: '/portfolio/', title: 'Home'},
-    {url: '/portfolio/projects/', title: 'Projects'},
+    {url: 'portfolio/', title: 'Home'},
+    {url: 'portfolio/projects/', title: 'Projects'},
     // add the rest of your pages here
-    {url: '/portfolio/contact/', title: 'Contact'},
+    {url: 'portfolio/contact/', title: 'Contact'},
     {url: 'https://github.com/kangyuj0531', title: 'Profile'},
-    {url: '/portfolio/resume/', title: 'Resume'}
+    {url: 'portfolio/resume/', title: 'Resume'}
 ];
 
 let nav = document.createElement('nav');
