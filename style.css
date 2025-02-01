@@ -92,8 +92,7 @@ body {
     display: grid;
     justify-content: space-between;
     align-items: center;
-    gap: 0.5em; /* Add this line to increase the space between elements */
-
+    gap: 0.5em; 
 }
 
 .project-details p, .project-details time {

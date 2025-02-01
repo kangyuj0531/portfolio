@@ -1,4 +1,4 @@
-import { fetchJSON, renderProjects, fetchGitHubData } from './global.js';
+import { fetchJSON, renderProjects, fetchGitHubData } from '../global.js';
 
 // const projects = await fetchJSON('../lib/projects.json');
 // const latestProjects = projects.slice(0, 3);
@@ -8,7 +8,6 @@ import { fetchJSON, renderProjects, fetchGitHubData } from './global.js';
 // renderProjects(latestProjects, projectsContainer, 'h2');
 // const githubData = await fetchGitHubData('kangyuj0531');
 // const profileStats = document.querySelector('#profile-stats');
-
 
 // if (profileStats) {
 //     profileStats.innerHTML = `
@@ -23,6 +22,10 @@ import { fetchJSON, renderProjects, fetchGitHubData } from './global.js';
 
 async function loadContent() {
     const projects = await fetchJSON('../lib/projects.json');
+    if (!projects) {
+        console.error('Failed to load projects');
+        return;
+    }
     const latestProjects = projects.slice(0, 3);
 
     const projectsContainer = document.querySelector('.projects');
