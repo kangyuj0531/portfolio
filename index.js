@@ -1,4 +1,4 @@
-import { fetchJSON, renderProjects, fetchGitHubData } from '../global.js';
+import { fetchJSON, renderProjects, fetchGitHubData } from './global.js';
 
 // const projects = await fetchJSON('../lib/projects.json');
 // const latestProjects = projects.slice(0, 3);
@@ -21,7 +21,7 @@ import { fetchJSON, renderProjects, fetchGitHubData } from '../global.js';
 // }
 
 async function loadContent() {
-    const projects = await fetchJSON('../lib/projects.json');
+    const projects = await fetchJSON('./lib/projects.json');
     if (!projects) {
         console.error('Failed to load projects');
         return;
