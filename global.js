@@ -5,12 +5,12 @@ function $$(selector, context = document) {
 }
 
 let pages = [
-    {url: 'https://kangyuj0531.github.io/portfolio/', title: 'Home'},
-    {url: 'https://kangyuj0531.github.io/portfolio/projects/', title: 'Projects'},
+    {url: '', title: 'Home'},
+    {url: 'projects/', title: 'Projects'},
     // add the rest of your pages here
-    {url: 'https://kangyuj0531.github.io/portfolio/contact/', title: 'Contact'},
+    {url: 'contact/', title: 'Contact'},
     {url: 'https://github.com/kangyuj0531', title: 'Profile'},
-    {url: 'https://kangyuj0531.github.io/portfolio/resume/', title: 'Resume'}
+    {url: 'resume/', title: 'Resume'}
 ];
 
 let nav = document.createElement('nav');
@@ -68,3 +68,19 @@ select.addEventListener('input', function (event) {
     document.documentElement.style.setProperty('color-scheme', event.target.value);
     localStorage.colorScheme = newScheme; 
 });
+
+// export async function fetchJSON(url) {
+//     try {
+//         // Fetch the JSON file from the given URL
+//         const response = await fetch(url);
+
+//         if (!response.ok) {
+//             throw new Error(`Failed to fetch projects: ${response.statusText}`);
+//         }
+
+//         console.log(response);
+
+//     } catch (error) {
+//         console.error('Error fetching or parsing JSON data:', error);
+//     }
+// }
