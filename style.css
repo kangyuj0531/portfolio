@@ -88,67 +88,102 @@ body {
       margin: 0;
   }
 
-  /* resume page */
-  header {
-    text-align: center;
-    margin-bottom: 2em;
-  }
-  
-  header h1 {
-      font-size: 2em;
-      margin: 0.5em 0;
-  }
-  
-  header p {
-      font-size: 1.2em;
-      color: gray;
-  }
-  
-  section {
-      padding: 1em;
-  }
-  
-  article {
-      margin-bottom: 2em;
-      padding: 1em;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      background-color: #f9f9f9;
-  }
-  
-  article header h2 {
-      font-size: 1.5em;
-      margin: 0 0 0.5em 0;
-  }
-  
-  article p {
-      margin: 0.5em 0;
-  }
-
-  article .education-header {
-    display: flex;
+  .project-details {
+    display: grid;
     justify-content: space-between;
     align-items: center;
-  }
+    gap: 0.5em; /* Add this line to increase the space between elements */
 
-  article .experience-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  article .date-range {
-    white-space: nowrap; 
-    font-size: 0.9em;
-    color: gray;
-  }
+}
 
-  article ul {
-    padding-left: 1.5em;
+.project-details p, .project-details time {
+  margin: 0;
+}
+
+/* resume page */
+header {
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+header h1 {
+    font-size: 2em;
     margin: 0.5em 0;
-  }
+}
 
-  article ul li {
-    margin-bottom: 0.5em;
-  }
+header p {
+    font-size: 1.2em;
+    color: gray;
+}
+
+section {
+    padding: 1em;
+}
+
+article {
+    margin-bottom: 2em;
+    padding: 1em;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+article header h2 {
+    font-size: 1.5em;
+    margin: 0 0 0.5em 0;
+}
+
+article p {
+    margin: 0.5em 0;
+}
+
+article .education-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+article .experience-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+article .date-range {
+  white-space: nowrap; 
+  font-size: 0.9em;
+  color: gray;
+}
+
+article ul {
+  padding-left: 1.5em;
+  margin: 0.5em 0;
+}
+
+article ul li {
+  margin-bottom: 0.5em;
+}
+}
+
+/* Profile stats styles */
+.profile-stats {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 10px;
+margin-top: 20px;
+}
+
+.profile-stats dt {
+grid-row: 1;
+padding: 5px;
+color: gray;
+
+}
+
+.profile-stats dd {
+grid-row: 2;
+margin: 0;
+padding: 5px;
+font-size: 1.5em;
+font-weight: bold;
 }

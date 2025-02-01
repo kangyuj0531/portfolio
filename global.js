@@ -69,18 +69,81 @@ select.addEventListener('input', function (event) {
     localStorage.colorScheme = newScheme; 
 });
 
-// export async function fetchJSON(url) {
-//     try {
-//         // Fetch the JSON file from the given URL
-//         const response = await fetch(url);
+export async function fetchJSON(url) {
+    try {
+        // Fetch the JSON file from the given URL
+        const response = await fetch(url);
+        console.log(response);
 
-//         if (!response.ok) {
-//             throw new Error(`Failed to fetch projects: ${response.statusText}`);
-//         }
+        if (!response.ok) {
+            throw new Error(`Failed to fetch projects: ${response.statusText}`);
+        }
 
-//         console.log(response);
+        const data = await response.json();
+        console.log(data);
+        return data; 
 
-//     } catch (error) {
-//         console.error('Error fetching or parsing JSON data:', error);
-//     }
-// }
+    } catch (error) {
+        console.error('Error fetching or parsing JSON data:', error);
+    }
+}
+
+fetchJSON('../lib/projects.json')
+
+export function renderProjects(projects, containerElement, headingLevel = 'h2') {
+    console.log('Rendering projects:', projects);
+    containerElement.innerHTML = '';
+
+    // Render each project
+    for (let project of projects) {
+        const article = document.createElement('article');
+
+        // Create the project title element based on the headingLevel
+        const projectTitle = document.createElement(headingLevel);
+        projectTitle.textContent = project.title;
+        article.appendChild(projectTitle);
+        
+        // Append the rest of the project details
+        const projectImage = document.createElement('img');
+        projectImage.src = project.image;
+        projectImage.alt = project.title;
+        article.appendChild(projectImage);
+
+        // const projectDescription = document.createElement('p');
+        // projectDescription.textContent = project.description;
+        // article.appendChild(projectDescription);
+
+        // const projectYear = document.createElement('time');
+        // projectYear.textContent = `Year: ${project.year}`;
+        // article.appendChild(projectYear);
+
+        // containerElement.appendChild(article);
+
+        // Create a container for project details
+        const projectDetails = document.createElement('div');
+        projectDetails.className = 'project-details';
+
+        // Append the project description
+        const projectDescription = document.createElement('p');
+        projectDescription.textContent = project.description;
+        projectDetails.appendChild(projectDescription);
+
+        // Append the project year using a <time> element
+        const projectYear = document.createElement('time');
+        projectYear.dateTime = project.year; // Set the datetime attribute
+        projectYear.textContent = `Year: ${project.year}`;
+        projectDetails.appendChild(projectYear);
+
+        // Append the project details container to the article
+        article.appendChild(projectDetails);
+
+        // Append the article to the container element
+        containerElement.appendChild(article);
+    }
+}
+
+export async function fetchGitHubData(username) {
+    // return statement here
+    return fetchJSON(`https://api.github.com/users/${username}`);
+
+  }
