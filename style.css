@@ -17,86 +17,131 @@ body {
   margin-inline: max(1em, (100% - 100ch) / 2);
   line-height: 1.1;
   text-wrap: balance;
+}
 
-  nav {
-    display: flex;
-    margin-bottom: 1em;
-    border-bottom: 1px solid oklch(50% 10% 200 / 40%);
-  }
+nav {
+  display: flex;
+  margin-bottom: 1em;
+  border-bottom: 1px solid oklch(50% 10% 200 / 40%);
+}
 
-  nav ul,
-  nav ul li {
-      display: contents;
-  }
+nav ul,
+nav ul li {
+    display: contents;
+}
 
-  nav a {
-    flex: 1;
-    text-decoration: none; 
-    color: inherit;
-    text-align: center; 
-    padding: 0.5em; 
-  }
+nav a {
+  flex: 1;
+  text-decoration: none; 
+  color: inherit;
+  text-align: center; 
+  padding: 0.5em; 
+}
 
-  a.current {
-    border-bottom: 0.4em solid oklch(80% 3% 200);
-    padding-bottom: 0.1em; 
-  }
+a.current {
+  border-bottom: 0.4em solid oklch(80% 3% 200);
+  padding-bottom: 0.1em; 
+}
 
-  nav a:hover {
-    border-bottom: 0.4em solid var(--color-accent); 
-    background-color: color-mix(in oklch, var(--color-accent), canvas 85%);
-  }
+nav a:hover {
+  border-bottom: 0.4em solid var(--color-accent); 
+  background-color: color-mix(in oklch, var(--color-accent), canvas 85%);
+}
 
-  .color-scheme {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    font-size: 90%;
-    font-family: inherit;
-    display: flex
-  }
+.color-scheme {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 90%;
+  font-family: inherit;
+  display: flex
+}
 
-  form {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1em;
-  }
+form {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1em;
+}
 
-  label{
-    display: grid;
-    grid-template-columns: subgrid;
-  }
+label{
+  display: grid;
+  grid-template-columns: subgrid;
+}
 
-  button {
-    grid-column: 1 / -1;
-    font: inherit;
-  }
-  
-  .projects {
-    display: grid;
-    gap: 1em;
-    grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
-  }
+button {
+  grid-column: 1 / -1;
+  font: inherit;
+}
 
-  .projects article {
-    display: grid;
-    grid-template-rows: subgrid;
-    grid-row: span 3;
-  }
-  
-  .projects h2 {
-      margin: 0;
-  }
+/* projects page */
+.projects {
+  display: grid;
+  gap: 1em;
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+}
 
-  .project-details {
-    display: grid;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.5em; 
+.projects article {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+}
+
+.projects h2 {
+    margin: 0;
+}
+
+.project-details {
+  display: grid;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5em; 
 }
 
 .project-details p, .project-details time {
   margin: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  gap: 2em; 
+  align-items: center; 
+}
+
+#projects-pie-plot {
+  max-width: 20em;
+  margin-block: 2em;
+  overflow: visible;
+  flex: 0 0 auto;
+}
+
+.legend {
+  list-style: none;
+  padding: 1em;
+  margin: 1em 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9em, 1fr)); 
+  gap: 1em;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  font-size: 0.9em;
+  padding: 0.5em;
+}
+
+.legend .swatch {
+  width: 1em;
+  height: 1em;
+  margin-right: 0.5em;
+  border-radius: 0.2em;
+  background-color: var(--color);
+  aspect-ratio: 1 / 1; 
 }
 
 /* resume page */
@@ -162,7 +207,7 @@ article ul {
 article ul li {
   margin-bottom: 0.5em;
 }
-}
+
 
 /* Profile stats styles */
 .profile-stats {
