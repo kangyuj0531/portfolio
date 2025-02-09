@@ -1,12 +1,12 @@
 [
 	{
-		"title": "Recipe Analysis",
+		"title": "Recommender Systems for Goodreads User",
 		"image": "https://vis-society.github.io/labs/2/images/empty.svg",
 		"description": "Developed a recommender system to analyze Goodreads book reviews to provide personalized book recommendations. ",
 		"year": "2024"
 	},
 	{
-		"title": "Recommender Systems for Goodreads User",
+		"title": "Recipe Analysis",
 		"image": "https://vis-society.github.io/labs/2/images/empty.svg",
 		"description": "Independently carry out a comprehensive data science project focused on recipe analysis, utilized Python and a variety of data science techniques and tools. ",
 		"year": "2024"
