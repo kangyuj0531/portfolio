@@ -8,9 +8,10 @@ let pages = [
     {url: '', title: 'Home'},
     {url: 'projects/', title: 'Projects'},
     // add the rest of your pages here
+    {url: 'resume/', title: 'Resume'},
     {url: 'contact/', title: 'Contact'},
-    {url: 'https://github.com/kangyuj0531', title: 'Profile'},
-    {url: 'resume/', title: 'Resume'}
+    {url: 'meta/', title: 'Meta'},
+    {url: 'https://github.com/kangyuj0531', title: 'Profile'}
 ];
 
 let nav = document.createElement('nav');
