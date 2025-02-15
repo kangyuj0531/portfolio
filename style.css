@@ -264,3 +264,97 @@ padding: 5px;
 font-size: 1.5em;
 font-weight: bold;
 }
+
+/* Meta page */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10em, 1fr));
+  gap: 1em;
+  padding: 1em;
+  margin: 1em 0; 
+}
+
+.stats dt {
+  font-size: 1em;
+  color: #787878;
+  margin-bottom: 0.5em;
+}
+
+.stats dd {
+  font-size: 1.2em;
+  margin: 0;
+  color: #333;
+}
+
+.gridlines{
+  stroke: #f4f4f4 !important; 
+  stroke-opacity: 0.1 !important;
+}
+
+/* Info section */
+dl.info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5em;
+  padding: 1em;
+  margin: 1em 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  transition-duration: 500ms;
+  transition-property: opacity, visibility;
+}
+
+dl.info[hidden]:not(:hover, :focus-within) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+dl.info dt {
+  font-size: 0.9em;
+  color: #787878;
+  margin: 0;
+}
+
+dl.info dd {
+  font-size: 1.2em;
+  margin: 0;
+  color: #333;
+}
+
+/* Tooltip */
+.tooltip {
+  position: fixed;
+  top: 1em;
+  left: 1em;
+  padding: 1em;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+circle {
+  transition: 200ms;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+circle:hover {
+  transform: scale(1.5);
+}
+
+@keyframes marching-ants {
+  to {
+    stroke-dashoffset: -8; /* 5 + 3 */
+  }
+}
+
+.selection {
+  fill-opacity: 0.1;
+  stroke: black;
+  stroke-opacity: 0.7;
+  stroke-dasharray: 5 3;
+  animation: marching-ants 2s linear infinite;
+}
