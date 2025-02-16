@@ -40,7 +40,7 @@ nav a {
 
 a.current {
   border-bottom: 0.4em solid oklch(80% 3% 200);
-  padding-bottom: 0.1em; 
+  padding-bottom: 0.5em; 
 }
 
 nav a:hover {
@@ -275,12 +275,14 @@ font-weight: bold;
 }
 
 .stats dt {
+  grid-row: 1;
   font-size: 1em;
   color: #787878;
   margin-bottom: 0.5em;
 }
 
 .stats dd {
+  grid-row: 2;
   font-size: 1.2em;
   margin: 0;
   color: #333;
@@ -291,7 +293,7 @@ font-weight: bold;
   stroke-opacity: 0.1 !important;
 }
 
-/* Info section */
+/* Tooltip */
 dl.info {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -357,4 +359,8 @@ circle:hover {
   stroke-opacity: 0.7;
   stroke-dasharray: 5 3;
   animation: marching-ants 2s linear infinite;
+}
+
+circle.selected {
+  fill: #ff6b6b;
 }
