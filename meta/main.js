@@ -113,8 +113,10 @@ function createScatterplot(){
 
   const dots = svg.append('g').attr('class', 'dots');
   const [minLines, maxLines] = d3.extent(commits, (d) => d.totalLines);
-  const rScale = d3.scaleLinear().domain([minLines, maxLines]).range([2, 15]); // adjust these values based on your experimentation
-
+  const rScale = d3
+                  .scaleSqrt() // Change only this line
+                  .domain([minLines, maxLines])
+                  .range([2, 30]);
   dots
   .selectAll('circle')
   .data(sortedCommits)
@@ -139,7 +141,7 @@ function createScatterplot(){
     updateTooltipVisibility(false);
   });
 
-  const margin = { top: 10, right: 10, bottom: 30, left: 20 };
+  const margin = { top: 10, right: 10, bottom: 10, left: 20 };
 
   const usableArea = {
     top: margin.top,
