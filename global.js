@@ -108,17 +108,9 @@ export function renderProjects(projects, containerElement, headingLevel = 'h2') 
         const projectImage = document.createElement('img');
         projectImage.src = project.image;
         projectImage.alt = project.title;
+        projectImage.style.width = '200px'; // Set the width
+        projectImage.style.height = 'auto'; // Set the height
         article.appendChild(projectImage);
-
-        // const projectDescription = document.createElement('p');
-        // projectDescription.textContent = project.description;
-        // article.appendChild(projectDescription);
-
-        // const projectYear = document.createElement('time');
-        // projectYear.textContent = `Year: ${project.year}`;
-        // article.appendChild(projectYear);
-
-        // containerElement.appendChild(article);
 
         // Create a container for project details
         const projectDetails = document.createElement('div');

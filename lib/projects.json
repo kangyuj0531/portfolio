@@ -1,5 +1,11 @@
 [
 	{
+		"title": "Boston Bike Flow",
+		"image": "../images/bike.png",
+		"description": "An interactive map visualization of bike traffic in the Boston area during different times of the day.",
+		"year": "2025"
+	},
+	{
 		"title": "Recommender Systems for Goodreads User",
 		"image": "https://vis-society.github.io/labs/2/images/empty.svg",
 		"description": "Developed a recommender system to analyze Goodreads book reviews to provide personalized book recommendations. ",
@@ -28,12 +34,6 @@
 		"image": "https://vis-society.github.io/labs/2/images/empty.svg",
 		"description": "Laborum alias ea unde harum aspernatur? Molestiae, veritatis, possimus, numquam ex excepturi quod ducimus sit odit optio quibusdam sequi aliquid itaque tempore perspiciatis placeat expedita vero voluptates. Sit, aspernatur sint!",
 		"year": "2023"
-	},
-	{
-		"title": "Quos sint quaerat omnis?",
-		"image": "https://vis-society.github.io/labs/2/images/empty.svg",
-		"description": "Est neque, velit nam rerum error odio voluptates voluptatem magnam laboriosam ad? Doloribus, id et itaque unde porro totam ullam quaerat blanditiis odit animi eveniet aut, voluptate velit iure odio.",
-		"year": "2022"
 	},
 	{
 		"title": "Iste ipsam magni fuga!",
