@@ -2,6 +2,7 @@ let data = [];
 let brushSelection = null;
 let xScale, yScale = null;
 let commits = d3.groups(data, (d) => d.commit);
+let selectedCommits = [];
 
 async function loadData() {
   // original function as before
@@ -128,7 +129,7 @@ function createScatterplot(){
   .attr('r', (d) => rScale(d.totalLines))
   .style('fill-opacity', 0.7) // Add transparency for overlapping dots
   .on('mouseenter', function (event, d, i) {
-    d3.select(event.currentTarget).style('fill-opacity', 1); // Full opacity on hover
+    d3.select(event.currentTarget).classed('selected', isCommitSelected(d)).style('fill-opacity', 1); // Full opacity on hover
     updateTooltipContent(d);
     updateTooltipVisibility(true);
     updateTooltipPosition(event);
@@ -136,8 +137,8 @@ function createScatterplot(){
   .on('mousemove', function (event) {
     updateTooltipPosition(event);
   })
-  .on('mouseleave', function (event) {
-    d3.select(event.currentTarget).style('fill-opacity', 0.7); // Restore transparency    updateTooltipContent({});
+  .on('mouseleave', function (event, d) {
+    d3.select(event.currentTarget).classed('selected', isCommitSelected(d)).style('fill-opacity', 0.7); // Restore transparency    updateTooltipContent({});
     updateTooltipVisibility(false);
   });
 
@@ -231,25 +232,25 @@ function brushSelector() {
   d3.select(svg).call(d3.brush().on('start brush end', brushed));
 }
 
-function brushed(event) {
-  brushSelection = event.selection;
+function brushed(evt) {
+  let brushSelection = evt.selection;
+  selectedCommits = !brushSelection
+    ? []
+    : commits.filter((commit) => {
+        let min = { x: brushSelection[0][0], y: brushSelection[0][1] };
+        let max = { x: brushSelection[1][0], y: brushSelection[1][1] };
+        let x = xScale(commit.date);
+        let y = yScale(commit.hourFrac);
+
+        return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
+      });
   updateSelection();
   updateSelectionCount();
   updateLanguageBreakdown();
 }
 
 function isCommitSelected(commit) {
-  if (!brushSelection) {
-    return false;
-  }
-  // TODO: return true if commit is within brushSelection
-  // and false if not
-  const min = { x: brushSelection[0][0], y: brushSelection[0][1] };
-  const max = { x: brushSelection[1][0], y: brushSelection[1][1] };
-  const x = xScale(commit.date);
-  const y = yScale(commit.hourFrac);
-
-  return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
+  return selectedCommits.includes(commit);
 }
 
 function updateSelection() {
@@ -258,9 +259,6 @@ function updateSelection() {
 }
 
 function updateSelectionCount() {
-  const selectedCommits = brushSelection
-    ? commits.filter(isCommitSelected)
-    : [];
 
   const countElement = document.getElementById('selection-count');
   countElement.textContent = `${
@@ -271,9 +269,6 @@ function updateSelectionCount() {
 }
 
 function updateLanguageBreakdown() {
-  const selectedCommits = brushSelection
-    ? commits.filter(isCommitSelected)
-    : [];
   const container = document.getElementById('language-breakdown');
 
   if (selectedCommits.length === 0) {
