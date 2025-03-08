@@ -28,26 +28,62 @@ async function loadData() {
   commitMaxTime = timeScale.invert(commitProgress);
 }
 
+function updateTimeDisplay() {
+  const timeSlider = document.getElementById('commit-slider');
+  const timeDisplay = document.getElementById('commit-time-display');
+  commitProgress = Number(timeSlider.value);
+  commitMaxTime = timeScale.invert(commitProgress);
+  timeDisplay.textContent = commitMaxTime.toLocaleString();
+  
+  const filteredCommits = commits.filter(commit => commit.datetime <= commitMaxTime);
+  updateScatterplot(filteredCommits);
+  updateFileStats(filteredCommits);
+}
+
+function updateFileStats(filteredCommits) {
+    let lines = filteredCommits.flatMap((d) => d.lines);
+    let files = d3
+      .groups(lines, (d) => d.file)
+      .map(([name, lines]) => {
+        return { name, lines };
+      });
+    files = d3.sort(files, (d) => -d.lines.length);
+
+    let fileTypeColors = d3.scaleOrdinal(d3.schemeTableau10);
+
+    // Update DOM to display file stats
+    d3.select('.files').selectAll('div').remove(); // Clear previous entries
+    let filesContainer = d3.select('.files')
+                           .selectAll('div')
+                           .data(files)
+                           .enter()
+                           .append('div');
+
+    filesContainer.append('dt')
+                  .html(d => `<code>${d.name}</code><small>${d.lines.length} lines</small>`);
+    
+    filesContainer.append('dd')
+                  .selectAll('div')
+                  .data(d => d.lines)
+                  .enter()
+                  .append('div')
+                  .attr('class', 'line')
+                  .style('background', d => fileTypeColors(d.type));
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     await loadData();
     updateScatterplot(commits);
     updateTooltipVisibility(false); // Hide the tooltip when the page loads
 
+    // Initialize the time display on load:
+    document.getElementById('commit-time-display').textContent = commitMaxTime.toLocaleString();
+
     const slider = document.getElementById('commit-slider');
-    const timeDisplay = document.getElementById('commit-time-display');
 
-    slider.addEventListener('input', (event) => {
-        commitProgress = +event.target.value;
-        commitMaxTime = timeScale.invert(commitProgress);
-        timeDisplay.textContent = commitMaxTime.toLocaleString();
-
-        // Filter commits based on the slider value
-        const filteredCommits = commits.filter(commit => commit.datetime <= commitMaxTime);
-        updateScatterplot(filteredCommits);    
-    });
-
-    // Initialize the time display
-    timeDisplay.textContent = commitMaxTime.toLocaleString();
+    // Instead of an inline function, call updateTimeDisplay when the slider value changes:
+    slider.addEventListener('input', updateTimeDisplay);  
+    
 });
 
 function processCommits() {
