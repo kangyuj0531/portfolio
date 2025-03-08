@@ -3,6 +3,9 @@ let brushSelection = null;
 let xScale, yScale = null;
 let commits = d3.groups(data, (d) => d.commit);
 let selectedCommits = [];
+let commitProgress = 100;
+let timeScale;
+let commitMaxTime;
 
 async function loadData() {
   // original function as before
@@ -18,13 +21,33 @@ async function loadData() {
   processCommits();
   displayStats();
   console.log(commits);
+
+  timeScale = d3.scaleTime()
+    .domain([d3.min(commits, d => d.datetime), d3.max(commits, d => d.datetime)])
+    .range([0, 100]);
+  commitMaxTime = timeScale.invert(commitProgress);
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
     await loadData();
-    createScatterplot();
+    updateScatterplot(commits);
     updateTooltipVisibility(false); // Hide the tooltip when the page loads
 
+    const slider = document.getElementById('commit-slider');
+    const timeDisplay = document.getElementById('commit-time-display');
+
+    slider.addEventListener('input', (event) => {
+        commitProgress = +event.target.value;
+        commitMaxTime = timeScale.invert(commitProgress);
+        timeDisplay.textContent = commitMaxTime.toLocaleString();
+
+        // Filter commits based on the slider value
+        const filteredCommits = commits.filter(commit => commit.datetime <= commitMaxTime);
+        updateScatterplot(filteredCommits);    
+    });
+
+    // Initialize the time display
+    timeDisplay.textContent = commitMaxTime.toLocaleString();
 });
 
 function processCommits() {
@@ -91,13 +114,12 @@ function displayStats() {
 
 }
 
-function createScatterplot(){
-
-  const sortedCommits = d3.sort(commits, (d) => -d.totalLines);
+function updateScatterplot(filteredCommits){
 
   const width = 1000;
   const height = 600;
 
+  d3.select('svg').remove();
   const svg = d3
     .select('#chart')
     .append('svg')
@@ -106,41 +128,44 @@ function createScatterplot(){
 
   xScale = d3
     .scaleTime()
-    .domain(d3.extent(commits, (d) => d.datetime))
+    .domain(d3.extent(filteredCommits, (d) => d.datetime))
     .range([0, width])
     .nice();
 
   yScale = d3.scaleLinear().domain([0, 24]).range([height, 0]);
 
+  svg.selectAll('g').remove(); // clear the scatters in order to re-draw the filtered ones
   const dots = svg.append('g').attr('class', 'dots');
-  const [minLines, maxLines] = d3.extent(commits, (d) => d.totalLines);
+  const [minLines, maxLines] = d3.extent(filteredCommits, (d) => d.totalLines);
   const rScale = d3
                   .scaleSqrt() // Change only this line
                   .domain([minLines, maxLines])
                   .range([2, 30]);
+
+  dots.selectAll('circle').remove(); 
   dots
-  .selectAll('circle')
-  .data(sortedCommits)
-  .join('circle')
-  .attr('cx', (d) => xScale(d.datetime))
-  .attr('cy', (d) => yScale(d.hourFrac))
-  .attr('r', 5)
-  .attr('fill', 'steelblue')
-  .attr('r', (d) => rScale(d.totalLines))
-  .style('fill-opacity', 0.7) // Add transparency for overlapping dots
-  .on('mouseenter', function (event, d, i) {
-    d3.select(event.currentTarget).classed('selected', isCommitSelected(d)).style('fill-opacity', 1); // Full opacity on hover
-    updateTooltipContent(d);
-    updateTooltipVisibility(true);
-    updateTooltipPosition(event);
-  })
-  .on('mousemove', function (event) {
-    updateTooltipPosition(event);
-  })
-  .on('mouseleave', function (event, d) {
-    d3.select(event.currentTarget).classed('selected', isCommitSelected(d)).style('fill-opacity', 0.7); // Restore transparency    updateTooltipContent({});
-    updateTooltipVisibility(false);
-  });
+    .selectAll('circle')
+    .data(filteredCommits)
+    .join('circle')
+    .attr('cx', (d) => xScale(d.datetime))
+    .attr('cy', (d) => yScale(d.hourFrac))
+    .attr('r', 5)
+    .attr('fill', 'steelblue')
+    .attr('r', (d) => rScale(d.totalLines))
+    .style('fill-opacity', 0.7) // Add transparency for overlapping dots
+    .on('mouseenter', function (event, d, i) {
+      d3.select(event.currentTarget).classed('selected', isCommitSelected(d)).style('fill-opacity', 1); // Full opacity on hover
+      updateTooltipContent(d);
+      updateTooltipVisibility(true);
+      updateTooltipPosition(event);
+    })
+    .on('mousemove', function (event) {
+      updateTooltipPosition(event);
+    })
+    .on('mouseleave', function (event, d) {
+      d3.select(event.currentTarget).classed('selected', isCommitSelected(d)).style('fill-opacity', 0.7); // Restore transparency    updateTooltipContent({});
+      updateTooltipVisibility(false);
+    });
 
   const margin = { top: 10, right: 10, bottom: 10, left: 20 };
 

@@ -324,6 +324,9 @@ circle {
   transition: 200ms;
   transform-origin: center;
   transform-box: fill-box;
+  @starting-style {
+    r: 0;
+  }
 }
 
 circle:hover {
@@ -347,3 +350,15 @@ circle:hover {
 circle.selected {
   fill: #ff6b6b;
 }
+
+#slider {
+  flex: 1;
+  align-items: baseline;
+  /* fill: blue; */
+}
+
+#commit-time-display {
+  margin-left: auto;
+  margin-bottom: 1em;
+}
+
