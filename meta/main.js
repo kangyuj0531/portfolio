@@ -88,7 +88,7 @@ function displayCommitFiles(filteredCommits) {
   const lines = filteredCommits.flatMap((d) => d.lines);
   let fileTypeColors = d3.scaleOrdinal(d3.schemeTableau10);
   let files = d3.groups(lines, (d) => d.file).map(([name, lines]) => {
-    return { name, lines };
+    return {name, lines};
   });
   files = d3.sort(files, (d) => -d.lines.length);
   d3.select('.files').selectAll('div').remove();
