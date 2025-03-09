@@ -6,84 +6,33 @@ let selectedCommits = [];
 let commitProgress = 100;
 let timeScale;
 let commitMaxTime;
+let NUM_ITEMS = 100; // Ideally, let this value be the length of your commit history
+let ITEM_HEIGHT = 70; // Feel free to change
+let VISIBLE_COUNT = 10; // Feel free to change as well
+let totalHeight = (NUM_ITEMS - 1) * ITEM_HEIGHT;
+const scrollContainer = d3.select('#scroll-container');
+const spacer = d3.select('#spacer');
+spacer.style('height', `${totalHeight}px`);
+const itemsContainer = d3.select('#items-container');
+scrollContainer.on('scroll', () => {
+  const scrollTop = scrollContainer.property('scrollTop');
+  let startIndex = Math.floor(scrollTop / ITEM_HEIGHT);
+  startIndex = Math.max(0, Math.min(startIndex, commits.length - VISIBLE_COUNT));
+  renderItems(startIndex);
+});
 
-async function loadData() {
-  // original function as before
-  data = await d3.csv("loc.csv", (row) => ({
-    ...row,
-    line: Number(row.line), // or just +row.line
-    depth: Number(row.depth),
-    length: Number(row.length),
-    date: new Date(row.date + "T00:00" + row.timezone),
-    datetime: new Date(row.datetime),
-}));
-
-  processCommits();
-  displayStats();
-  console.log(commits);
-
-  timeScale = d3.scaleTime()
-    .domain([d3.min(commits, d => d.datetime), d3.max(commits, d => d.datetime)])
-    .range([0, 100]);
-  commitMaxTime = timeScale.invert(commitProgress);
-}
-
-function updateTimeDisplay() {
-  const timeSlider = document.getElementById('commit-slider');
-  const timeDisplay = document.getElementById('commit-time-display');
-  commitProgress = Number(timeSlider.value);
-  commitMaxTime = timeScale.invert(commitProgress);
-  timeDisplay.textContent = commitMaxTime.toLocaleString();
-  
-  const filteredCommits = commits.filter(commit => commit.datetime <= commitMaxTime);
-  updateScatterplot(filteredCommits);
-  updateFileStats(filteredCommits);
-}
-
-function updateFileStats(filteredCommits) {
-    let lines = filteredCommits.flatMap((d) => d.lines);
-    let files = d3
-      .groups(lines, (d) => d.file)
-      .map(([name, lines]) => {
-        return { name, lines };
-      });
-    files = d3.sort(files, (d) => -d.lines.length);
-
-    let fileTypeColors = d3.scaleOrdinal(d3.schemeTableau10);
-
-    // Update DOM to display file stats
-    d3.select('.files').selectAll('div').remove(); // Clear previous entries
-    let filesContainer = d3.select('.files')
-                           .selectAll('div')
-                           .data(files)
-                           .enter()
-                           .append('div');
-
-    filesContainer.append('dt')
-                  .html(d => `<code>${d.name}</code><small>${d.lines.length} lines</small>`);
-    
-    filesContainer.append('dd')
-                  .selectAll('div')
-                  .data(d => d.lines)
-                  .enter()
-                  .append('div')
-                  .attr('class', 'line')
-                  .style('background', d => fileTypeColors(d.type));
-}
-
-document.addEventListener("DOMContentLoaded", async () => {
-    await loadData();
-    updateScatterplot(commits);
-    updateTooltipVisibility(false); // Hide the tooltip when the page loads
-
-    // Initialize the time display on load:
-    document.getElementById('commit-time-display').textContent = commitMaxTime.toLocaleString();
-
-    const slider = document.getElementById('commit-slider');
-
-    // Instead of an inline function, call updateTimeDisplay when the slider value changes:
-    slider.addEventListener('input', updateTimeDisplay);  
-    
+let FILE_VISIBLE_COUNT = 10;  
+let FILE_ITEM_HEIGHT = 70; 
+const fileScrollContainer = d3.select('#file-scroll-container');
+const fileSpacer = d3.select('#file-spacer');
+const fileTotalHeight = (NUM_ITEMS - 1) * FILE_ITEM_HEIGHT;  
+fileSpacer.style('height', `${fileTotalHeight}px`);
+const fileContainer = d3.select('#file-items-container');
+fileScrollContainer.on('scroll', () => {
+  const scrollTop = fileScrollContainer.property('scrollTop');
+  let startIndex = Math.floor(scrollTop / FILE_ITEM_HEIGHT);
+  startIndex = Math.max(0, Math.min(startIndex, commits.length - FILE_VISIBLE_COUNT));
+  renderFileSizes(startIndex);
 });
 
 function processCommits() {
@@ -106,8 +55,6 @@ function processCommits() {
 
       Object.defineProperty(ret, 'lines', {
         value: lines,
-        // What other options do we need to set?
-        // Hint: look up configurable, writable, and enumerable
         configurable: true,
         writable: true,
         enumerable: true
@@ -116,6 +63,96 @@ function processCommits() {
       return ret;
     });
 }
+
+async function loadData() {
+  // original function as before
+  data = await d3.csv("loc.csv", (row) => ({
+    ...row,
+    line: Number(row.line), // or just +row.line
+    depth: Number(row.depth),
+    length: Number(row.length),
+    date: new Date(row.date + "T00:00" + row.timezone),
+    datetime: new Date(row.datetime),
+}));
+
+  processCommits();
+  displayStats();
+
+  timeScale = d3.scaleTime()
+    .domain([d3.min(commits, d => d.datetime), d3.max(commits, d => d.datetime)])
+    .range([0, 100]);
+  commitMaxTime = timeScale.invert(commitProgress);
+}
+
+function displayCommitFiles(filteredCommits) {
+  const lines = filteredCommits.flatMap((d) => d.lines);
+  let fileTypeColors = d3.scaleOrdinal(d3.schemeTableau10);
+  let files = d3.groups(lines, (d) => d.file).map(([name, lines]) => {
+    return { name, lines };
+  });
+  files = d3.sort(files, (d) => -d.lines.length);
+  d3.select('.files').selectAll('div').remove();
+  let filesContainer = d3.select('.files').selectAll('div').data(files).enter().append('div');
+  filesContainer.append('dt').html(d => `<code>${d.name}</code><small>${d.lines.length} lines</small>`);
+  filesContainer.append('dd')
+                .selectAll('div')
+                .data(d => d.lines)
+                .enter()
+                .append('div')
+                .attr('class', 'line')
+                .style('background', d => fileTypeColors(d.type));
+}
+
+function renderFileSizes(startIndex) {
+  fileContainer.selectAll('div').remove();
+  const endIndex = Math.min(startIndex + FILE_VISIBLE_COUNT, commits.length);
+  let newFileSlice = commits.slice(startIndex, endIndex);
+  displayCommitFiles(newFileSlice);
+    
+  fileContainer.selectAll('div')
+                .data(newFileSlice)
+                .enter()
+                .append('div')
+                .html((commit, idx) => {
+                  return `<p>
+                    In commit ${commit.id} (on ${commit.datetime.toLocaleString("en", {dateStyle: "full", timeStyle: "short"})}), I edited ${commit.totalLines} lines.
+                  </p>`;
+                })
+                .style('position', 'absolute')
+                .style('top', (_, idx) => `${idx * FILE_ITEM_HEIGHT}px`);
+                
+}
+
+function renderItems(startIndex) {
+  // Clear things off
+  itemsContainer.selectAll('div').remove();
+  const endIndex = Math.min(startIndex + VISIBLE_COUNT, commits.length);
+  let newCommitSlice = commits.slice(startIndex, endIndex);
+
+  updateScatterplot(newCommitSlice);
+
+  // Re-bind the commit data to the container and represent each using a div
+  itemsContainer.selectAll('div')
+                .data(newCommitSlice)
+                .enter()
+                .append('div')
+                .html((commit, idx) => {
+                  return `<p>
+                  On ${commit.datetime.toLocaleString("en", {dateStyle: "full", timeStyle: "short"})}, I made 
+                    ${idx > 0 ? 'another glorious commit' : 'my first commit, and it was glorious'}
+                  </a>. I edited ${commit.totalLines} lines across ${d3.rollups(commit.lines, D => D.length, d => d.file).length} files. Then I looked over all I had made, and I saw that it was very good.
+                </p>`;
+                })
+                .style('position', 'absolute')
+                .style('top', (_, idx) => `${idx * ITEM_HEIGHT}px`)
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadData();
+    updateScatterplot(commits);
+    updateTooltipVisibility(false); // Hide the tooltip when the page loads
+    displayCommitFiles(commits);
+});
 
 function displayStats() {
   // Process commits first
@@ -203,7 +240,7 @@ function updateScatterplot(filteredCommits){
       updateTooltipVisibility(false);
     });
 
-  const margin = { top: 10, right: 10, bottom: 10, left: 20 };
+  const margin = { top: 0, right: 10, bottom: 0, left: 20 };
 
   const usableArea = {
     top: margin.top,

@@ -18,13 +18,14 @@
     <div id="stats"></div>
 
     <h2>Commits by time of day</h2>
-    <label id="slider">Show commits until: 
-        <input type="range" id="commit-slider" min="0" max="100" value="100">
-        <time id="commit-time-display"></time>
-    </label>
-    <dl class="files"></dl>
-    <div id="chart">
+    <div id="scrollytelling">
+        <div id="scroll-container">
+            <div id="spacer"></div>
+            <div id="items-container"></div>
+        </div>
+        <div id="chart"></div>
     </div>
+    <!-- <dl class="files"></dl> -->
 
     <dl id="commit-tooltip" class="info tooltip">
         <dt>Commit</dt>
@@ -50,6 +51,16 @@
     <p id="selection-count">No commits selected</p>
     <dl id="language-breakdown" class="stats"></dl>
 
-
+    <!-- File Sizes Visualization -->
+    <h2>Files by Size</h2>
+    <div id="scrollytelling2" style="display: flex; gap: 1em;">
+        <!-- Left: the unit visualization of files (using a similar format as displayCommitFiles) -->
+        <dl class="files"></dl>
+        <div id="file-scroll-container">
+            <div id="file-spacer"></div>
+            <div id="file-items-container"></div>
+        </div>
+    </div>
+    
 </body>
 </html>
